@@ -45,9 +45,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: 10,
                   itemExtent: 130,
-                  padding: EdgeInsets.only(
-                    bottom: 100,
-                  ),
+                  padding: const EdgeInsets.only(bottom: 100),
                   itemBuilder: (context, index) =>
                       _CompletedTaskItem(index: index),
                 )
@@ -342,9 +340,7 @@ class _RowTitle extends StatelessWidget {
 }
 
 class _HeaderProfile extends StatelessWidget {
-  const _HeaderProfile({
-    super.key,
-  });
+  const _HeaderProfile();
 
   @override
   Widget build(BuildContext context) {
