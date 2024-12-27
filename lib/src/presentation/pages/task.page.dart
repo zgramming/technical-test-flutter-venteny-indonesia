@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:technical_test_venteny_indonesia/src/config/constant.dart';
-import 'package:technical_test_venteny_indonesia/src/config/enum.dart';
 
 import '../../config/font.dart';
 import '../widgets/form_task.widget.dart';
