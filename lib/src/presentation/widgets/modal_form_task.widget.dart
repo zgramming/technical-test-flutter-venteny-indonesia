@@ -6,20 +6,20 @@ import 'package:intl/intl.dart';
 import '../../config/enum.dart';
 import '../../config/font.dart';
 
-class FormTask extends StatefulWidget {
+class ModalFormTask extends StatefulWidget {
   final bool isEdit;
   final String? id;
-  const FormTask({
+  const ModalFormTask({
     super.key,
     this.isEdit = false,
     this.id,
   });
 
   @override
-  State<FormTask> createState() => _FormTaskState();
+  State<ModalFormTask> createState() => _ModalFormTaskState();
 }
 
-class _FormTaskState extends State<FormTask> {
+class _ModalFormTaskState extends State<ModalFormTask> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   DateTime? selectedDate;

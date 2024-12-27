@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:technical_test_venteny_indonesia/src/presentation/widgets/modal_form_task.widget.dart';
 
 import '../../config/font.dart';
-import '../widgets/form_task.widget.dart';
 import '../widgets/row_title.widget.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -20,7 +20,7 @@ class _DashboardPageState extends State<DashboardPage> {
       isScrollControlled: true,
       backgroundColor: Colors.white,
       builder: (context) {
-        return const FormTask();
+        return const ModalFormTask();
       },
     );
   }
@@ -69,6 +69,8 @@ class _DashboardPageState extends State<DashboardPage> {
             bottom: 16,
             right: 16,
             child: FloatingActionButton(
+              key: const Key('add_task_button'),
+              heroTag: 'add_task_button',
               onPressed: openFormModal,
               child: const Icon(FontAwesomeIcons.plus),
             ),

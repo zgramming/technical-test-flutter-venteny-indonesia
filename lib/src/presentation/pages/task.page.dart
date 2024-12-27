@@ -3,7 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
 import '../../config/font.dart';
-import '../widgets/form_task.widget.dart';
+import '../widgets/modal_filter_task.widget.dart';
+import '../widgets/modal_form_task.widget.dart';
 import '../widgets/row_title.widget.dart';
 
 class TaskPage extends StatefulWidget {
@@ -74,7 +75,7 @@ class _TaskPageState extends State<TaskPage> {
                                 isScrollControlled: true,
                                 backgroundColor: Colors.white,
                                 builder: (context) {
-                                  return const FormTask(
+                                  return const ModalFormTask(
                                     isEdit: true,
                                     id: '1',
                                   );
@@ -177,6 +178,8 @@ class _TaskPageState extends State<TaskPage> {
                   right: 16,
                   bottom: 16,
                   child: FloatingActionButton(
+                    key: const Key('filter_button'),
+                    heroTag: 'filter_button',
                     onPressed: () async {
                       await showModalBottomSheet(
                         context: context,
@@ -187,32 +190,7 @@ class _TaskPageState extends State<TaskPage> {
                           ),
                         ),
                         isScrollControlled: true,
-                        builder: (context) {
-                          // Form Filter with status
-                          return SingleChildScrollView(
-                            child: Container(
-                              margin: const EdgeInsets.all(16),
-                              padding: EdgeInsets.only(
-                                bottom:
-                                    MediaQuery.of(context).viewInsets.bottom,
-                              ),
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(16),
-                                ),
-                              ),
-                              child: const Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [Text("123")],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
+                        builder: (context) => const ModalFilterTask(),
                       );
                     },
                     backgroundColor: Colors.blue,
