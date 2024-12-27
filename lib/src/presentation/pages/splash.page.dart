@@ -18,7 +18,7 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _navigateToNextPage() async {
     await Future.delayed(const Duration(seconds: 2));
-    router.goNamed(RoutersName.welcome);
+    router.goNamed(RoutersName.onboarding);
   }
 
   @override

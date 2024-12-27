@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:introduction_screen/introduction_screen.dart';
+import 'package:technical_test_venteny_indonesia/src/config/color.dart';
+import 'package:technical_test_venteny_indonesia/src/config/font.dart';
+import 'package:technical_test_venteny_indonesia/src/config/routes.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -8,11 +14,75 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class OnboardingPageState extends State<OnboardingPage> {
+  final basePath = 'assets/images/svg';
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Onboarding Page'),
+    final titleStyle = headerFont.copyWith(
+      color: Colors.black,
+      fontSize: 24.0,
+      fontWeight: FontWeight.bold,
+    );
+    final bodyStyle = bodyFont.copyWith(
+      color: Colors.black,
+      fontSize: 16.0,
+    );
+    return Scaffold(
+      body: Container(
+        margin: const EdgeInsets.only(top: 50.0),
+        child: IntroductionScreen(
+          pages: [
+            PageViewModel(
+              title: 'Modern Design',
+              body:
+                  'Enjoy the modern design of the app, and the best user experience',
+              image: SvgPicture.asset('$basePath/onboarding.design.svg'),
+              decoration: PageDecoration(
+                titleTextStyle: titleStyle,
+                bodyTextStyle: bodyStyle,
+              ),
+            ),
+            PageViewModel(
+              title: 'Set your notification',
+              body:
+                  'Set your notification to get the newest task and update from the app',
+              image: SvgPicture.asset('$basePath/onboarding.notification.svg'),
+              decoration: PageDecoration(
+                titleTextStyle: titleStyle,
+                bodyTextStyle: bodyStyle,
+              ),
+            ),
+            PageViewModel(
+              title: 'Easy to use',
+              body:
+                  'The app is easy to use, and you can use it anywhere and anytime',
+              image: SvgPicture.asset('$basePath/onboarding.statistic.svg'),
+              decoration: PageDecoration(
+                titleTextStyle: titleStyle,
+                bodyTextStyle: bodyStyle,
+              ),
+            ),
+          ],
+          onDone: () {
+            context.pushReplacementNamed(RoutersName.login);
+          },
+          onSkip: () {
+            context.pushReplacementNamed(RoutersName.login);
+          },
+          showSkipButton: true,
+          skip: Text(
+            'Skip',
+            style: bodyFont.copyWith(color: Colors.black, fontSize: 16.0),
+          ),
+          next: const Icon(
+            Icons.arrow_forward,
+            size: 30.0,
+            color: secondaryColor,
+          ),
+          done: Text(
+            'Done',
+            style: bodyFont.copyWith(color: Colors.black, fontSize: 16.0),
+          ),
+        ),
       ),
     );
   }
