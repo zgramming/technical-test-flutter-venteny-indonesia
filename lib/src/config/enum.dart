@@ -3,3 +3,8 @@ enum TaskStatus {
   progress,
   completed,
 }
+
+enum ThemeType {
+  light,
+  dark,
+}

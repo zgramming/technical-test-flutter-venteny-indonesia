@@ -36,8 +36,6 @@ class _DashboardPageState extends State<DashboardPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const _HeaderProfile(),
-                const SizedBox(height: 16),
                 RowTitle(
                   actionText: 'See all',
                   title: 'Pending (99+)',
@@ -313,47 +311,6 @@ class _PendingTaskItem extends StatelessWidget {
           )
         ],
       ),
-    );
-  }
-}
-
-class _HeaderProfile extends StatelessWidget {
-  const _HeaderProfile();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const CircleAvatar(
-          radius: 20,
-          backgroundColor: Colors.blue,
-          child: Icon(
-            FontAwesomeIcons.user,
-            size: 20,
-            color: Colors.white,
-          ),
-        ),
-        const SizedBox(width: 16),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Hello,',
-              style: bodyFont.copyWith(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
-            ),
-            Text(
-              'John Doe',
-              style: bodyFont.copyWith(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }
