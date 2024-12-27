@@ -1,0 +1,89 @@
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:technical_test_venteny_indonesia/src/presentation/pages/task.page.dart';
+
+import 'dashboard.page.dart';
+import 'setting.page.dart';
+
+class WelcomePage extends StatefulWidget {
+  const WelcomePage({super.key});
+
+  @override
+  State<WelcomePage> createState() => _WelcomePageState();
+}
+
+class _WelcomePageState extends State<WelcomePage> {
+  int _selectedIndex = 0;
+
+  void _onDestinationSelected(int index) {
+    setState(() => _selectedIndex = index);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Widget> destinations = [
+      const NavigationDestination(
+        icon: Icon(
+          FontAwesomeIcons.house,
+          size: 24,
+          color: Colors.grey,
+        ),
+        selectedIcon: Icon(
+          FontAwesomeIcons.houseUser,
+          size: 24,
+          color: Colors.white,
+        ),
+        label: 'Dashboard',
+        tooltip: 'Dashboard',
+      ),
+      const NavigationDestination(
+        icon: Icon(
+          FontAwesomeIcons.listCheck,
+          size: 24,
+          color: Colors.grey,
+        ),
+        selectedIcon: Icon(
+          FontAwesomeIcons.checkDouble,
+          size: 24,
+          color: Colors.white,
+        ),
+        label: 'Task',
+        tooltip: 'Task',
+      ),
+      const NavigationDestination(
+        icon: Icon(
+          FontAwesomeIcons.gear,
+          size: 24,
+          color: Colors.grey,
+        ),
+        selectedIcon: Icon(
+          FontAwesomeIcons.gears,
+          size: 24,
+          color: Colors.white,
+        ),
+        label: 'Setting',
+        tooltip: 'Setting',
+      ),
+    ];
+
+    return Scaffold(
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: const [
+          DashboardPage(),
+          TaskPage(),
+          SettingPage(),
+        ],
+      ),
+      bottomNavigationBar: NavigationBar(
+        backgroundColor: Colors.white,
+        elevation: 5,
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: _onDestinationSelected,
+        indicatorColor: Colors.blue,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+        destinations: destinations,
+      ),
+    );
+  }
+}
