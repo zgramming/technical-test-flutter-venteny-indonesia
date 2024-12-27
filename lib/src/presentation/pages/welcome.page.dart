@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:technical_test_venteny_indonesia/src/presentation/pages/task.page.dart';
+import 'task.page.dart';
 
 import 'dashboard.page.dart';
 import 'setting.page.dart';

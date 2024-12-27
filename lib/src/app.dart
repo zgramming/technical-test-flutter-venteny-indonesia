@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:technical_test_venteny_indonesia/src/config/color.dart';
-import 'package:technical_test_venteny_indonesia/src/config/font.dart';
+import 'config/color.dart';
+import 'config/font.dart';
 
 import 'config/routes.dart';
 
@@ -25,6 +25,12 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         textTheme: bodyFontTheme(theme.textTheme),
         scaffoldBackgroundColor: Colors.grey.shade100,
+        cardTheme: CardTheme(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          color: Colors.white,
+        ),
       ),
     );
   }

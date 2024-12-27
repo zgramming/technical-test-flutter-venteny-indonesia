@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:technical_test_venteny_indonesia/src/config/color.dart';
-import 'package:technical_test_venteny_indonesia/src/config/font.dart';
-import 'package:technical_test_venteny_indonesia/src/config/routes.dart';
+import '../../config/color.dart';
+import '../../config/font.dart';
+import '../../config/routes.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});

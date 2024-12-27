@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:technical_test_venteny_indonesia/src/config/font.dart';
-import 'package:technical_test_venteny_indonesia/src/config/routes.dart';
+import '../../config/font.dart';
+import '../../config/routes.dart';
 
 import '../../config/enum.dart';
 

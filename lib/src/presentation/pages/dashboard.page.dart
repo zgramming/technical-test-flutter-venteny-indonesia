@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:technical_test_venteny_indonesia/src/presentation/widgets/modal_form_task.widget.dart';
+import '../widgets/modal_form_task.widget.dart';
 
 import '../../config/font.dart';
 import '../widgets/row_title.widget.dart';
@@ -43,7 +43,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
                 const SizedBox(height: 16),
                 const _PendingTasks(),
-                const SizedBox(height: 32),
+                const SizedBox(height: 16),
                 RowTitle(
                   actionText: 'See all',
                   title: 'Completed (99+)',
