@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import '../../core/function_helper.dart';
+import '../../core/helper/function.helper.dart';
 
 import '../../config/enum.dart';
 import '../../config/font.dart';

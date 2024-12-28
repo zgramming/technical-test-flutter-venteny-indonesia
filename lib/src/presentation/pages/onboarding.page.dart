@@ -5,6 +5,7 @@ import 'package:introduction_screen/introduction_screen.dart';
 import '../../config/color.dart';
 import '../../config/font.dart';
 import '../../config/routes.dart';
+import '../../core/helper/share_preferences.helper.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -15,6 +16,21 @@ class OnboardingPage extends StatefulWidget {
 
 class OnboardingPageState extends State<OnboardingPage> {
   final basePath = 'assets/images/svg';
+
+  Future<void> _onDone() async {
+    await SharedPreferencesHelper.setOnboarding(true);
+    if (!mounted) return;
+
+    context.pushReplacementNamed(RoutersName.login);
+  }
+
+  Future<void> _onSkip() async {
+    await SharedPreferencesHelper.setOnboarding(true);
+    if (!mounted) return;
+
+    context.pushReplacementNamed(RoutersName.login);
+  }
+
   @override
   Widget build(BuildContext context) {
     final titleStyle = headerFont.copyWith(
@@ -62,12 +78,6 @@ class OnboardingPageState extends State<OnboardingPage> {
               ),
             ),
           ],
-          onDone: () {
-            context.pushReplacementNamed(RoutersName.login);
-          },
-          onSkip: () {
-            context.pushReplacementNamed(RoutersName.login);
-          },
           showSkipButton: true,
           skip: Text(
             'Skip',
@@ -82,6 +92,8 @@ class OnboardingPageState extends State<OnboardingPage> {
             'Done',
             style: bodyFont.copyWith(color: Colors.black, fontSize: 16.0),
           ),
+          onDone: _onDone,
+          onSkip: _onSkip,
         ),
       ),
     );

@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../config/color.dart';
 import '../../config/font.dart';
 import '../../config/routes.dart';
-import '../../core/function_helper.dart';
+import '../../core/helper/function.helper.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
