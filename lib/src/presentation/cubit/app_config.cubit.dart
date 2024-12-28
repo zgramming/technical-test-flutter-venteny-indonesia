@@ -1,12 +1,8 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:developer';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/app_config.entity.dart';
 import '../../domain/usecase/get_app_config.usecase.dart';
-import '../state/life_cycle.state.dart';
 
 class AppConfigState extends Equatable {
   final AppConfigEntity? appConfig;
