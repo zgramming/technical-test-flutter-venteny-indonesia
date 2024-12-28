@@ -303,11 +303,12 @@ class _PendingTaskItem extends StatelessWidget {
           Container(
             height: 10,
             decoration: BoxDecoration(
-                color: randomColor.withOpacity(0.5),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(16),
-                  bottomRight: Radius.circular(16),
-                )),
+              color: randomColor.withValues(alpha: 100),
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(16),
+                bottomRight: Radius.circular(16),
+              ),
+            ),
           )
         ],
       ),
