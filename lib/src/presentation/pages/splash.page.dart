@@ -14,35 +14,26 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   @override
-  void initState() {
-    super.initState();
-    Future.microtask(() => _navigateToNextPage());
-  }
-
-  Future<void> _navigateToNextPage() async {
-    // await Future.delayed(const Duration(seconds: 2));
-    // router.goNamed(RoutersName.welcome);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocListener<AppConfigCubit, AppConfigState>(
         listener: (context, state) {
-          final appConfig = state.appConfig;
+          if (state is AppConfigStateLoaded) {
+            final appConfig = state.appConfig;
+            final loginCredential = appConfig.loginCredential;
+            final alreadyOnboarded = appConfig.alreadyShowOnboarding;
 
-          final loginCredential = appConfig?.loginCredential;
-          final alreadyOnboarded = appConfig?.alreadyShowOnboarding ?? false;
+            if (!alreadyOnboarded) {
+              context.goNamed(RoutersName.onboarding);
+              return;
+            }
 
-          if (loginCredential != null || loginCredential?.isNotEmpty == true) {
-            if (alreadyOnboarded) {
+            if (loginCredential.isEmpty) {
               context.goNamed(RoutersName.login);
               return;
             }
 
-            context.goNamed(RoutersName.onboarding);
-          } else {
-            context.goNamed(RoutersName.login);
+            context.goNamed(RoutersName.welcome);
           }
         },
         child: BlocBuilder<AppConfigCubit, AppConfigState>(
@@ -51,8 +42,17 @@ class _SplashPageState extends State<SplashPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             // Loading indicator
             children: [
-              const Text("Loading..."),
-              Text("data: ${state.appConfig}"),
+              if (state is AppConfigStateLoading)
+                const Center(child: CircularProgressIndicator()),
+
+              // Error message
+              if (state is AppConfigStateError)
+                Center(
+                  child: Text(
+                    state.message,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
             ],
           ),
         ),

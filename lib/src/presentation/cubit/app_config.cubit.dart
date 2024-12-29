@@ -1,35 +1,27 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/app_config.entity.dart';
 import '../../domain/usecase/get_app_config.usecase.dart';
 
-class AppConfigState extends Equatable {
-  final AppConfigEntity? appConfig;
-  const AppConfigState({
-    this.appConfig = const AppConfigEntity(),
-  });
+abstract class AppConfigState {}
 
-  @override
-  List<Object?> get props => [appConfig];
+class AppConfigStateLoading extends AppConfigState {}
 
-  @override
-  bool get stringify => true;
+class AppConfigStateLoaded extends AppConfigState {
+  final AppConfigEntity appConfig;
+  AppConfigStateLoaded(this.appConfig);
+}
 
-  AppConfigState copyWith({
-    AppConfigEntity? appConfig,
-  }) {
-    return AppConfigState(
-      appConfig: appConfig ?? this.appConfig,
-    );
-  }
+class AppConfigStateError extends AppConfigState {
+  final String message;
+  AppConfigStateError(this.message);
 }
 
 class AppConfigCubit extends Cubit<AppConfigState> {
   final GetAppConfigUseCase getAppConfigUseCase;
   AppConfigCubit({
     required this.getAppConfigUseCase,
-  }) : super(const AppConfigState()) {
+  }) : super(AppConfigStateLoading()) {
     loadAppConfig();
   }
 
@@ -41,10 +33,10 @@ class AppConfigCubit extends Cubit<AppConfigState> {
 
     result.fold(
       (failure) {
-        emit(state.copyWith(appConfig: const AppConfigEntity()));
+        emit(AppConfigStateError(failure.message));
       },
       (data) {
-        emit(state.copyWith(appConfig: data));
+        emit(AppConfigStateLoaded(data));
       },
     );
   }
