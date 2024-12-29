@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../config/color.dart';
 import '../../config/font.dart';
 
 class RowTitle extends StatelessWidget {
@@ -31,10 +32,7 @@ class RowTitle extends StatelessWidget {
             onPressed: onActionPressed,
             child: Text(
               actionText!,
-              style: bodyFont.copyWith(
-                fontSize: 14,
-                color: Colors.blue,
-              ),
+              style: bodyFont.copyWith(fontSize: 14, color: primaryColor),
             ),
           )
       ],

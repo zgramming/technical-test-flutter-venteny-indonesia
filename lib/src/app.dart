@@ -7,6 +7,8 @@ import 'config/routes.dart';
 import 'injection.dart';
 import 'presentation/cubit/app_config.cubit.dart';
 import 'presentation/cubit/auth.cubit.dart';
+import 'presentation/cubit/task.cubit.dart';
+import 'presentation/cubit/task_detail.cubit.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -19,6 +21,8 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => sl<AppConfigCubit>()),
         BlocProvider(create: (context) => sl<AuthCubit>()),
+        BlocProvider(create: (context) => sl<TaskCubit>()),
+        BlocProvider(create: (context) => sl<TaskDetailCubit>()),
       ],
       child: MaterialApp.router(
         title: 'Task Management App',

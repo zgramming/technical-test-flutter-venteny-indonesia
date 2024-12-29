@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../config/color.dart';
 import '../../config/enum.dart';
 import '../../config/font.dart';
 
@@ -117,7 +118,7 @@ class _ModalFilterTaskState extends State<ModalFilterTask> {
                     status.icon,
                     size: 16,
                     color: selectedStatus == status.status
-                        ? Colors.blue
+                        ? primaryColor
                         : Colors.grey,
                   ),
                   selected: selectedStatus == status.status,
@@ -127,7 +128,7 @@ class _ModalFilterTaskState extends State<ModalFilterTask> {
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
                       color: selectedStatus == status.status
-                          ? Colors.blue
+                          ? primaryColor
                           : Colors.black,
                     ),
                   ),
@@ -169,7 +170,7 @@ class _ModalFilterTaskState extends State<ModalFilterTask> {
                     child: ElevatedButton(
                       onPressed: applyFilter,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor: primaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),

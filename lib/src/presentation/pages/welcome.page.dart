@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../config/color.dart';
 import 'task.page.dart';
 
 import 'dashboard.page.dart';
@@ -80,7 +81,7 @@ class _WelcomePageState extends State<WelcomePage> {
         elevation: 5,
         selectedIndex: _selectedIndex,
         onDestinationSelected: _onDestinationSelected,
-        indicatorColor: Colors.blue,
+        indicatorColor: primaryColor,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         destinations: destinations,
       ),

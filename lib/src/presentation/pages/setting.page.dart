@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import '../../config/color.dart';
 import '../../config/font.dart';
 import '../../config/routes.dart';
 
@@ -121,7 +122,7 @@ class _SettingPageState extends State<SettingPage> {
                         leading: const Icon(
                           FontAwesomeIcons.bell,
                           size: 20,
-                          color: Colors.blue,
+                          color: primaryColor,
                         ),
                         title: Text(
                           'Notification',
