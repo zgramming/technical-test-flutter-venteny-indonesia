@@ -9,6 +9,7 @@ import 'presentation/cubit/app_config.cubit.dart';
 import 'presentation/cubit/auth.cubit.dart';
 import 'presentation/cubit/task.cubit.dart';
 import 'presentation/cubit/task_detail.cubit.dart';
+import 'presentation/cubit/task_filter_query.cubit.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => sl<AuthCubit>()),
         BlocProvider(create: (context) => sl<TaskCubit>()),
         BlocProvider(create: (context) => sl<TaskDetailCubit>()),
+        BlocProvider(create: (context) => sl<TaskFilterQueryCubit>()),
       ],
       child: MaterialApp.router(
         title: 'Task Management App',

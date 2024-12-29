@@ -21,11 +21,12 @@ import 'presentation/cubit/app_config.cubit.dart';
 import 'presentation/cubit/auth.cubit.dart';
 import 'presentation/cubit/task.cubit.dart';
 import 'presentation/cubit/task_detail.cubit.dart';
+import 'presentation/cubit/task_filter_query.cubit.dart';
 
 final sl = GetIt.instance;
 
 void initInjection() {
-  // Register Cubit
+  // Register Cubit / Bloc
   sl.registerFactory(() => AppConfigCubit(getAppConfigUseCase: sl()));
   sl.registerFactory(() => AuthCubit(loginUseCase: sl(), logoutUseCase: sl()));
   sl.registerFactory(
@@ -37,6 +38,7 @@ void initInjection() {
     ),
   );
   sl.registerFactory(() => TaskDetailCubit(getTaskByIdUseCase: sl()));
+  sl.registerFactory(() => TaskFilterQueryCubit());
 
   // Register UseCases
   sl.registerLazySingleton(() => GetAppConfigUseCase(repository: sl()));

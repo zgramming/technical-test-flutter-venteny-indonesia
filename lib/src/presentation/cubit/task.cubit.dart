@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../config/enum.dart';
 import '../../data/models/dto/task_create_or_update.dto.dart';
 import '../../domain/entities/task.entity.dart';
 import '../../domain/usecase/add_task.usecase.dart';
@@ -83,21 +84,28 @@ class TaskCubit extends Cubit<TaskState> {
 
   void filter({
     String? query,
-    TaskState? status,
+    TaskStatus? status,
   }) {
-    if (state is TaskSuccessState && query != null) {
+    if (state is TaskSuccessState) {
       final currentState = state as TaskSuccessState;
       final tasks = [...currentState.tasks];
 
-      final filteredTasks = tasks.where((x) {
-        final title = x.title.toLowerCase();
-        final queryLower = query.toLowerCase();
-        final statusMatch = status == null || x.status == status.toString();
+      // Assign the query and status to the current state
 
-        return title.contains(queryLower) && statusMatch;
+      final filteredResult = tasks.where((x) {
+        final title = x.title.toLowerCase();
+
+        final statusMatch = status == null
+            ? true
+            : status.toString().split('.').last == x.status;
+
+        final queryMatch =
+            query == null ? true : title.contains(query.toLowerCase());
+
+        return statusMatch && queryMatch;
       }).toList();
 
-      emit(TaskSuccessState(tasks: tasks, filteredTasks: filteredTasks));
+      emit(TaskSuccessState(tasks: tasks, filteredTasks: filteredResult));
     }
   }
 }

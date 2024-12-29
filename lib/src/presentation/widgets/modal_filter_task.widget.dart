@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../config/color.dart';
 import '../../config/enum.dart';
 import '../../config/font.dart';
+import '../cubit/task_filter_query.cubit.dart';
 
 class FilterStatus {
   final TaskStatus status;
@@ -55,11 +58,19 @@ class _ModalFilterTaskState extends State<ModalFilterTask> {
   TaskStatus? selectedStatus;
 
   Future<void> applyFilter() async {
-    Navigator.of(context).pop();
+    context.read<TaskFilterQueryCubit>().setStatus(selectedStatus);
+    context.pop();
   }
 
   Future<void> resetFilter() async {
-    setState(() => selectedStatus = null);
+    context.read<TaskFilterQueryCubit>().clear();
+    context.pop();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    selectedStatus = context.read<TaskFilterQueryCubit>().state.status;
   }
 
   @override
