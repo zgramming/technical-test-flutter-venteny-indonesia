@@ -6,6 +6,7 @@ import '../../config/font.dart';
 import '../../config/routes.dart';
 
 import '../../config/enum.dart';
+import '../../core/helper/share_preferences.helper.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -21,8 +22,40 @@ class _SettingPageState extends State<SettingPage> {
   ThemeType selectedTheme = ThemeType.light;
   bool selectedNotification = true;
 
+  Future<void> onChangeTheme(ThemeType? theme) async {
+    final result = theme ?? ThemeType.light;
+    await SharedPreferencesHelper.setTheme(result);
+
+    setState(() => selectedTheme = result);
+  }
+
+  Future<void> onChangeNotification(bool value) async {
+    await SharedPreferencesHelper.setNotification(value);
+
+    setState(() => selectedNotification = value);
+  }
+
   Future<void> onLogout() async {
+    await SharedPreferencesHelper.clear();
+    if (!mounted) return;
+
     context.pushReplacementNamed(RoutersName.login);
+  }
+
+  void initialize() async {
+    final notification = SharedPreferencesHelper.getNotification();
+    final theme = SharedPreferencesHelper.getTheme();
+
+    setState(() {
+      selectedTheme = theme;
+      selectedNotification = notification;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initialize();
   }
 
   @override
@@ -99,11 +132,7 @@ class _SettingPageState extends State<SettingPage> {
                         ),
                         trailing: DropdownButton<ThemeType>(
                           value: selectedTheme,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedTheme = value!;
-                            });
-                          },
+                          onChanged: (value) => onChangeTheme(value),
                           items: ThemeType.values
                               .map(
                                 (theme) => DropdownMenuItem(
@@ -140,11 +169,7 @@ class _SettingPageState extends State<SettingPage> {
                         ),
                         trailing: Switch(
                           value: selectedNotification,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedNotification = value;
-                            });
-                          },
+                          onChanged: onChangeNotification,
                         ),
                       ),
                       ListTile(

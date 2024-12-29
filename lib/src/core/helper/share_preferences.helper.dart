@@ -23,7 +23,7 @@ class SharedPreferencesHelper {
   }
 
   static bool getNotification() {
-    return instance.getBool(kSharedPrefNotificationKey) ?? false;
+    return instance.getBool(kSharedPrefNotificationKey) ?? true;
   }
 
   static Future<void> setTheme(ThemeType theme) async {
@@ -45,6 +45,8 @@ class SharedPreferencesHelper {
   }
 
   static Future<void> clear() async {
-    await instance.clear();
+    await instance.remove(kSharedPrefLoginCredentialKey);
+    await instance.remove(kSharedPrefNotificationKey);
+    await instance.remove(kSharedPrefThemeKey);
   }
 }
