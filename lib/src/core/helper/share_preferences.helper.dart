@@ -43,4 +43,8 @@ class SharedPreferencesHelper {
   static String getLoginCredential() {
     return instance.getString(kSharedPrefLoginCredentialKey) ?? '';
   }
+
+  static Future<void> clear() async {
+    await instance.clear();
+  }
 }
