@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import '../../config/color.dart';
 import '../../config/font.dart';
 import '../../config/routes.dart';
-import '../../core/helper/function.helper.dart';
 import '../../core/helper/share_preferences.helper.dart';
 import '../cubit/auth.cubit.dart';
 
@@ -139,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 8.0),
                           TextFormField(
                             controller: emailController,
-                            decoration: FunctionHelper.inputFilledDecoration(
+                            decoration: const InputDecoration(
                               hintText: "Enter your email",
                             ),
                             keyboardType: TextInputType.emailAddress,
@@ -179,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 8.0),
                           TextFormField(
                             controller: passwordController,
-                            decoration: FunctionHelper.inputFilledDecoration(
+                            decoration: InputDecoration(
                               hintText: "Enter your password",
                               suffixIcon: IconButton(
                                 icon: Icon(
@@ -225,13 +224,6 @@ class _LoginPageState extends State<LoginPage> {
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                           ),
-                          // child: Text(
-                          //   "Sign in",
-                          //   style: bodyFont.copyWith(
-                          //     color: Colors.white,
-                          //     fontSize: 16.0,
-                          //   ),
-                          // ),
                           child: isLoading
                               ? const Center(
                                   child: CircularProgressIndicator(
