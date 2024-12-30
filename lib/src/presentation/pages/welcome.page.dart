@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../config/color.dart';
 
+import '../../core/helper/local_notification.helper.dart';
 import 'task.page.dart';
 import 'setting.page.dart';
 
@@ -18,6 +19,17 @@ class _WelcomePageState extends State<WelcomePage> {
 
   void _onDestinationSelected(int index) {
     setState(() => _selectedIndex = index);
+  }
+
+  Future<void> requestPermission() async {
+    await LocalNotificationHelper.requestPermission();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    requestPermission();
   }
 
   @override

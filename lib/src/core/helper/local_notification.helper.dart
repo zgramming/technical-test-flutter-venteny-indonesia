@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -43,32 +44,38 @@ class LocalNotificationHelper {
     required String body,
     String? payload,
   }) async {
-    const androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'TASK_REMINDER_CHANNEL_ID',
-      'TASK_REMINDER_CHANNEL_NAME',
-      channelDescription: 'TASK_REMINDER_CHANNEL_DESCRIPTION',
-      importance: Importance.max,
-      priority: Priority.high,
-    );
+    try {
+      const androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'TASK_REMINDER_CHANNEL_ID',
+        'TASK_REMINDER_CHANNEL_NAME',
+        channelDescription: 'TASK_REMINDER_CHANNEL_DESCRIPTION',
+        importance: Importance.max,
+        priority: Priority.high,
+      );
 
-    const iosPlatformChannelSpecifics = DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
+      const iosPlatformChannelSpecifics = DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      );
 
-    const platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-      iOS: iosPlatformChannelSpecifics,
-    );
+      const platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iosPlatformChannelSpecifics,
+      );
 
-    await _flutterLocalNotificationsPlugin.show(
-      id,
-      title,
-      body,
-      platformChannelSpecifics,
-      payload: payload,
-    );
+      await _flutterLocalNotificationsPlugin.show(
+        id,
+        title,
+        body,
+        platformChannelSpecifics,
+        payload: payload,
+      );
+
+      log('Notification shown! id: $id, title: $title, body: $body');
+    } catch (e) {
+      log("error show notification: $e");
+    }
   }
 
   static Future<void> scheduleNotification({
@@ -78,38 +85,42 @@ class LocalNotificationHelper {
     required DateTime scheduledDate,
     String? payload,
   }) async {
-    final scheduledTime = tz.TZDateTime.from(scheduledDate, tz.local);
+    try {
+      final scheduledTime = tz.TZDateTime.from(scheduledDate, tz.local);
 
-    const androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'TASK_REMINDER_CHANNEL_ID',
-      'TASK_REMINDER_CHANNEL_NAME',
-      channelDescription: 'TASK_REMINDER_CHANNEL_DESCRIPTION',
-      importance: Importance.max,
-      priority: Priority.high,
-    );
+      const androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'TASK_REMINDER_CHANNEL_ID',
+        'TASK_REMINDER_CHANNEL_NAME',
+        channelDescription: 'TASK_REMINDER_CHANNEL_DESCRIPTION',
+        importance: Importance.max,
+        priority: Priority.high,
+      );
 
-    const iosPlatformChannelSpecifics = DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
+      const iosPlatformChannelSpecifics = DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      );
 
-    const platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-      iOS: iosPlatformChannelSpecifics,
-    );
+      const platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iosPlatformChannelSpecifics,
+      );
 
-    await _flutterLocalNotificationsPlugin.zonedSchedule(
-      id,
-      title,
-      body,
-      scheduledTime,
-      platformChannelSpecifics,
-      androidScheduleMode: AndroidScheduleMode.exact,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      payload: payload,
-    );
+      await _flutterLocalNotificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        scheduledTime,
+        platformChannelSpecifics,
+        androidScheduleMode: AndroidScheduleMode.inexact,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        payload: payload,
+      );
+    } catch (e) {
+      log("error schedule notification: $e");
+    }
   }
 
   static Future<void> cancelNotification(int id) async {
@@ -128,6 +139,25 @@ class LocalNotificationHelper {
     final pendingNotifications = await getPendingNotifications();
     for (final notification in pendingNotifications) {
       await cancelNotification(notification.id);
+    }
+  }
+
+  // Request permission
+  static Future<void> requestPermission() async {
+    if (Platform.isAndroid) {
+      await _flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.requestNotificationsPermission();
+    } else if (Platform.isIOS) {
+      await _flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
     }
   }
 }
