@@ -132,7 +132,6 @@ class _LoginPageState extends State<LoginPage> {
                           Text(
                             "Email",
                             style: bodyFont.copyWith(
-                              color: Colors.black,
                               fontSize: 16.0,
                               fontWeight: FontWeight.bold,
                             ),
@@ -173,7 +172,6 @@ class _LoginPageState extends State<LoginPage> {
                           Text(
                             "Password",
                             style: bodyFont.copyWith(
-                              color: Colors.black,
                               fontSize: 16.0,
                               fontWeight: FontWeight.bold,
                             ),

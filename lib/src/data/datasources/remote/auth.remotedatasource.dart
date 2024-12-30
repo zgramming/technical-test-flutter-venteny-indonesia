@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import '../../../config/constant.dart';
 import '../../../core/helper/http_client.helper.dart';
-import '../../../core/helper/share_preferences.helper.dart';
 import '../../models/auth.model.dart';
 
 abstract class AuthRemoteDataSource {
@@ -48,6 +47,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> logout() async {
     // Remove all shared preferences
-    await SharedPreferencesHelper.clear();
+    // await SharedPreferencesHelper.clear();
   }
 }

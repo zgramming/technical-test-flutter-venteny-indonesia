@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../config/color.dart';
 import 'task.page.dart';
 
-import 'dashboard.page.dart';
 import 'setting.page.dart';
 
 class WelcomePage extends StatefulWidget {
@@ -23,20 +22,6 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> destinations = [
-      const NavigationDestination(
-        icon: Icon(
-          FontAwesomeIcons.house,
-          size: 24,
-          color: Colors.grey,
-        ),
-        selectedIcon: Icon(
-          FontAwesomeIcons.houseUser,
-          size: 24,
-          color: Colors.white,
-        ),
-        label: 'Dashboard',
-        tooltip: 'Dashboard',
-      ),
       const NavigationDestination(
         icon: Icon(
           FontAwesomeIcons.listCheck,
@@ -71,13 +56,11 @@ class _WelcomePageState extends State<WelcomePage> {
       body: IndexedStack(
         index: _selectedIndex,
         children: const [
-          DashboardPage(),
           TaskPage(),
           SettingPage(),
         ],
       ),
       bottomNavigationBar: NavigationBar(
-        backgroundColor: Colors.white,
         elevation: 5,
         selectedIndex: _selectedIndex,
         onDestinationSelected: _onDestinationSelected,

@@ -25,6 +25,16 @@ class _TaskPageState extends State<TaskPage> {
     context.read<TaskCubit>().get();
   }
 
+  Future<void> openFormModal() async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return const ModalFormTask();
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -50,7 +60,7 @@ class _TaskPageState extends State<TaskPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 16),
+                const SizedBox(height: 32),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
@@ -64,9 +74,7 @@ class _TaskPageState extends State<TaskPage> {
                   child: Builder(
                     builder: (context) {
                       if (state is TaskLoadingState) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
+                        return const Center(child: CircularProgressIndicator());
                       }
 
                       if (state is TaskErrorState) {
@@ -142,43 +150,33 @@ class _TaskPageState extends State<TaskPage> {
                                         DateFormat('E, dd MMM yyyy')
                                             .format(task.dueDate);
 
-                                    return InkWell(
-                                      onTap: () async {
-                                        await showModalBottomSheet(
-                                          context: context,
-                                          isScrollControlled: true,
-                                          backgroundColor: Colors.white,
-                                          builder: (context) {
-                                            return ModalFormTask(
-                                              isEdit: true,
-                                              id: task.id,
-                                            );
-                                          },
-                                        );
-                                      },
-                                      child: Ink(
-                                        decoration: const BoxDecoration(
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black12,
-                                              blurRadius: 4,
-                                              offset: Offset(0, 2),
-                                            ),
-                                          ],
-                                          borderRadius: BorderRadius.horizontal(
-                                            left: Radius.circular(4),
-                                            right: Radius.circular(4),
-                                          ),
-                                          border: Border(
-                                            left: BorderSide(
-                                              color: primaryColor,
-                                              width: 4,
-                                            ),
-                                          ),
-                                        ),
+                                    return Card(
+                                      margin: EdgeInsets.zero,
+                                      child: InkWell(
+                                        onTap: () async {
+                                          await showModalBottomSheet(
+                                            context: context,
+                                            isScrollControlled: true,
+                                            builder: (context) {
+                                              return ModalFormTask(
+                                                isEdit: true,
+                                                id: task.id,
+                                              );
+                                            },
+                                          );
+                                        },
                                         child: Container(
-                                          padding: const EdgeInsets.all(16),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                            border: Border(
+                                              left: BorderSide(
+                                                color: color,
+                                                width: 4,
+                                              ),
+                                            ),
+                                          ),
+                                          padding: const EdgeInsets.all(16.0),
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.stretch,
@@ -235,12 +233,34 @@ class _TaskPageState extends State<TaskPage> {
                                               const SizedBox(height: 8),
                                               const Divider(),
                                               const SizedBox(height: 8),
-                                              Text(
-                                                formattedDate,
-                                                style: bodyFont.copyWith(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w300,
-                                                ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    formattedDate,
+                                                    style: bodyFont.copyWith(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                    ),
+                                                  ),
+                                                  IconButton(
+                                                    onPressed: () async {
+                                                      await context
+                                                          .read<TaskCubit>()
+                                                          .delete(task.id);
+                                                    },
+                                                    icon: const Icon(
+                                                      FontAwesomeIcons.trash,
+                                                      size: 16,
+                                                      color: Colors.red,
+                                                    ),
+                                                  )
+                                                ],
                                               ),
                                             ],
                                           ),
@@ -257,7 +277,7 @@ class _TaskPageState extends State<TaskPage> {
                           // Filter Button
                           Positioned(
                             right: 16,
-                            bottom: 16,
+                            bottom: 80,
                             child: FloatingActionButton(
                               key: const Key('filter_button'),
                               heroTag: 'filter_button',
@@ -274,9 +294,26 @@ class _TaskPageState extends State<TaskPage> {
                                   builder: (context) => const ModalFilterTask(),
                                 );
                               },
-                              backgroundColor: primaryColor,
+                              backgroundColor: Colors.blue,
                               child: const Icon(
                                 FontAwesomeIcons.filter,
+                                size: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+
+                          // Add Button
+                          Positioned(
+                            right: 16,
+                            bottom: 16,
+                            child: FloatingActionButton(
+                              key: const Key('add_task_button'),
+                              heroTag: 'add_task_button',
+                              backgroundColor: primaryColor,
+                              onPressed: openFormModal,
+                              child: const Icon(
+                                FontAwesomeIcons.plus,
                                 size: 16,
                                 color: Colors.white,
                               ),
@@ -308,34 +345,12 @@ class _SearchBarState extends State<_SearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.search),
-          const SizedBox(width: 8),
-          Expanded(
-            child: TextFormField(
-              onChanged: onSearch,
-              onTapOutside: (event) => FocusScope.of(context).unfocus(),
-              decoration: const InputDecoration(
-                hintText: 'Search',
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-        ],
+    return TextFormField(
+      onChanged: onSearch,
+      onTapOutside: (event) => FocusScope.of(context).unfocus(),
+      decoration: const InputDecoration(
+        prefixIcon: Icon(Icons.search),
+        hintText: 'Search',
       ),
     );
   }

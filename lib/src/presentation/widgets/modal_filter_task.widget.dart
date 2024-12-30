@@ -76,17 +76,8 @@ class _ModalFilterTaskState extends State<ModalFilterTask> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Container(
+      child: Card(
         margin: const EdgeInsets.all(16),
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(
-            Radius.circular(16),
-          ),
-        ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -123,7 +114,6 @@ class _ModalFilterTaskState extends State<ModalFilterTask> {
               ),
               ...statuses.map(
                 (status) => ListTile(
-                  splashColor: Colors.red,
                   contentPadding: EdgeInsets.zero,
                   leading: Icon(
                     status.icon,
@@ -138,9 +128,6 @@ class _ModalFilterTaskState extends State<ModalFilterTask> {
                     style: bodyFont.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
-                      color: selectedStatus == status.status
-                          ? primaryColor
-                          : Colors.black,
                     ),
                   ),
                   subtitle: Text(

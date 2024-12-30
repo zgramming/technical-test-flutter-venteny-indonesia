@@ -194,7 +194,7 @@ class _ModalFormTaskState extends State<ModalFormTask> {
                           controller: titleController,
                           onTapOutside: (event) =>
                               FocusScope.of(context).unfocus(),
-                          decoration: FunctionHelper.inputFilledDecoration(
+                          decoration: const InputDecoration(
                             hintText: 'Enter title',
                           ),
                           validator: (value) {
@@ -219,18 +219,8 @@ class _ModalFormTaskState extends State<ModalFormTask> {
                           onTapOutside: (event) =>
                               FocusScope.of(context).unfocus(),
                           maxLines: 3,
-                          decoration: InputDecoration(
-                            fillColor: Colors.grey[200],
-                            filled: true,
+                          decoration: const InputDecoration(
                             hintText: 'Enter description',
-                            hintStyle: bodyFont.copyWith(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide.none,
-                            ),
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -246,7 +236,9 @@ class _ModalFormTaskState extends State<ModalFormTask> {
                         Text(
                           "Date",
                           style: bodyFont.copyWith(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         TextFormField(
@@ -269,12 +261,9 @@ class _ModalFormTaskState extends State<ModalFormTask> {
                                   .format(selectedDate);
                             }
                           },
-                          decoration: FunctionHelper.inputFilledDecoration(
-                            hintText: 'Select Date',
-                            prefixIcon: const Icon(
-                              FontAwesomeIcons.calendarDay,
-                              size: 16,
-                            ),
+                          decoration: const InputDecoration(
+                            hintText: 'Select date',
+                            prefixIcon: Icon(FontAwesomeIcons.calendarDay),
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
