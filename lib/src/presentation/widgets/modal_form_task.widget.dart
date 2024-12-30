@@ -142,8 +142,8 @@ class _ModalFormTaskState extends State<ModalFormTask> {
               final task = state.task;
               titleController.text = task.title;
               descriptionController.text = task.description;
-              dateController.text =
-                  DateFormat('E, dd MMM yyyy').format(task.dueDate);
+              final formatDateTime = DateFormat('E, dd MMM yyyy HH:mm');
+              dateController.text = formatDateTime.format(task.dueDate);
               selectedDate = task.dueDate;
 
               selectedStatus = TaskStatus.values.firstWhereOrNull((element) {
