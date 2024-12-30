@@ -5,17 +5,20 @@ import 'package:dartz/dartz.dart';
 import '../../core/error/failure.error.dart';
 import '../../data/datasources/local/task.localdatasource.dart';
 import '../../data/models/dto/task_create_or_update.dto.dart';
+import '../entities/response/task_operation_response.entity.dart';
 import '../entities/task.entity.dart';
 
 abstract class TaskRepository {
   Future<Either<Failure, List<TaskEntity>>> get();
   Future<Either<Failure, TaskEntity>> getById(int id);
-  Future<Either<Failure, List<TaskEntity>>> add(TaskCreateOrUpdateDto task);
-  Future<Either<Failure, List<TaskEntity>>> update(
+  Future<Either<Failure, TaskOperationResponseEntity>> add(
+    TaskCreateOrUpdateDto task,
+  );
+  Future<Either<Failure, TaskOperationResponseEntity>> update(
     int id,
     TaskCreateOrUpdateDto task,
   );
-  Future<Either<Failure, List<TaskEntity>>> delete(int id);
+  Future<Either<Failure, TaskOperationResponseEntity>> delete(int id);
 }
 
 class TaskRepositoryImpl implements TaskRepository {
@@ -50,13 +53,13 @@ class TaskRepositoryImpl implements TaskRepository {
   }
 
   @override
-  Future<Either<Failure, List<TaskEntity>>> add(
+  Future<Either<Failure, TaskOperationResponseEntity>> add(
     TaskCreateOrUpdateDto task,
   ) async {
     try {
       final result = await localDataSource.add(task);
-      final entities = result.map((x) => TaskEntity.fromModel(x)).toList();
-      return Right(entities);
+      final entity = TaskOperationResponseEntity.fromModel(result);
+      return Right(entity);
     } catch (e) {
       log("Error Add Task: $e");
       return const Left(CommonFailure('Failed to add task'));
@@ -64,14 +67,14 @@ class TaskRepositoryImpl implements TaskRepository {
   }
 
   @override
-  Future<Either<Failure, List<TaskEntity>>> update(
+  Future<Either<Failure, TaskOperationResponseEntity>> update(
     int id,
     TaskCreateOrUpdateDto task,
   ) async {
     try {
       final result = await localDataSource.update(id, task);
-      final entities = result.map((x) => TaskEntity.fromModel(x)).toList();
-      return Right(entities);
+      final entity = TaskOperationResponseEntity.fromModel(result);
+      return Right(entity);
     } catch (e) {
       log("Error Update Task: $e");
       return const Left(CommonFailure('Failed to update task'));
@@ -79,11 +82,11 @@ class TaskRepositoryImpl implements TaskRepository {
   }
 
   @override
-  Future<Either<Failure, List<TaskEntity>>> delete(int id) async {
+  Future<Either<Failure, TaskOperationResponseEntity>> delete(int id) async {
     try {
       final result = await localDataSource.delete(id);
-      final entities = result.map((x) => TaskEntity.fromModel(x)).toList();
-      return Right(entities);
+      final entity = TaskOperationResponseEntity.fromModel(result);
+      return Right(entity);
     } catch (e) {
       log("Error Delete Task: $e");
       return const Left(CommonFailure('Failed to delete task'));

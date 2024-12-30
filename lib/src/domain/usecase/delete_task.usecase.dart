@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import '../../core/error/failure.error.dart';
-import '../entities/task.entity.dart';
+import '../entities/response/task_operation_response.entity.dart';
 import '../repositories/task.repository.dart';
 
 class DeleteTaskUseCase {
@@ -11,7 +11,7 @@ class DeleteTaskUseCase {
     required this.repository,
   });
 
-  Future<Either<Failure, List<TaskEntity>>> call(int id) {
+  Future<Either<Failure, TaskOperationResponseEntity>> call(int id) {
     return repository.delete(id);
   }
 }

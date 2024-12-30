@@ -7,6 +7,9 @@ import 'package:intl/intl.dart';
 import '../../config/color.dart';
 import '../../config/enum.dart';
 import '../../config/font.dart';
+import '../../core/helper/function.helper.dart';
+import '../../core/helper/local_notification.helper.dart';
+import '../../domain/entities/task.entity.dart';
 import '../cubit/task.cubit.dart';
 import '../cubit/task_filter_query.cubit.dart';
 import '../widgets/modal_filter_task.widget.dart';
@@ -121,152 +124,7 @@ class _TaskPageState extends State<TaskPage> {
                                       const SizedBox(height: 16.0),
                                   itemBuilder: (context, index) {
                                     final task = tasks[index];
-                                    final taskStatus =
-                                        TaskStatus.values.firstWhereOrNull(
-                                      (element) => element.name == task.status,
-                                    );
-                                    Color color = Colors.grey;
-                                    IconData icon = FontAwesomeIcons.check;
-
-                                    final isCompleted =
-                                        taskStatus == TaskStatus.completed;
-                                    final isProgress =
-                                        taskStatus == TaskStatus.progress;
-                                    final isPending =
-                                        taskStatus == TaskStatus.pending;
-
-                                    if (isCompleted) {
-                                      color = Colors.green;
-                                      icon = FontAwesomeIcons.circleCheck;
-                                    } else if (isProgress) {
-                                      color = Colors.blue;
-                                      icon = FontAwesomeIcons.arrowsRotate;
-                                    } else if (isPending) {
-                                      color = Colors.amber;
-                                      icon = FontAwesomeIcons.solidClock;
-                                    }
-
-                                    final formattedDate =
-                                        DateFormat('E, dd MMM yyyy')
-                                            .format(task.dueDate);
-
-                                    return Card(
-                                      margin: EdgeInsets.zero,
-                                      child: InkWell(
-                                        onTap: () async {
-                                          await showModalBottomSheet(
-                                            context: context,
-                                            isScrollControlled: true,
-                                            builder: (context) {
-                                              return ModalFormTask(
-                                                isEdit: true,
-                                                id: task.id,
-                                              );
-                                            },
-                                          );
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                            border: Border(
-                                              left: BorderSide(
-                                                color: color,
-                                                width: 4,
-                                              ),
-                                            ),
-                                          ),
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.stretch,
-                                            children: [
-                                              Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                children: [
-                                                  Expanded(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .stretch,
-                                                      children: [
-                                                        Text(
-                                                          task.title,
-                                                          maxLines: 1,
-                                                          style: headerFont
-                                                              .copyWith(
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 8),
-                                                        Text(
-                                                          task.description,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style:
-                                                              bodyFont.copyWith(
-                                                            fontSize: 10,
-                                                            fontWeight:
-                                                                FontWeight.w300,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 16),
-                                                  CircleAvatar(
-                                                    radius: 16,
-                                                    backgroundColor: color,
-                                                    child: Icon(
-                                                      icon,
-                                                      size: 16,
-                                                      color: Colors.white,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                              const SizedBox(height: 8),
-                                              const Divider(),
-                                              const SizedBox(height: 8),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    formattedDate,
-                                                    style: bodyFont.copyWith(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                    ),
-                                                  ),
-                                                  IconButton(
-                                                    onPressed: () async {
-                                                      await context
-                                                          .read<TaskCubit>()
-                                                          .delete(task.id);
-                                                    },
-                                                    icon: const Icon(
-                                                      FontAwesomeIcons.trash,
-                                                      size: 16,
-                                                      color: Colors.red,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
+                                    return _TaksItem(task: task);
                                   },
                                 ),
                                 const SizedBox(height: 40),
@@ -351,6 +209,162 @@ class _SearchBarState extends State<_SearchBar> {
       decoration: const InputDecoration(
         prefixIcon: Icon(Icons.search),
         hintText: 'Search',
+      ),
+    );
+  }
+}
+
+class _TaksItem extends StatelessWidget {
+  final TaskEntity task;
+  const _TaksItem({
+    required this.task,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final taskStatus = TaskStatus.values.firstWhereOrNull(
+      (element) => element.name == task.status,
+    );
+    Color color = Colors.grey;
+    IconData icon = FontAwesomeIcons.check;
+
+    final isCompleted = taskStatus == TaskStatus.completed;
+    final isProgress = taskStatus == TaskStatus.progress;
+    final isPending = taskStatus == TaskStatus.pending;
+
+    if (isCompleted) {
+      color = Colors.green;
+      icon = FontAwesomeIcons.circleCheck;
+    } else if (isProgress) {
+      color = Colors.blue;
+      icon = FontAwesomeIcons.arrowsRotate;
+    } else if (isPending) {
+      color = Colors.amber;
+      icon = FontAwesomeIcons.solidClock;
+    }
+
+    final formattedDate = DateFormat('E, dd MMM yyyy').format(task.dueDate);
+    return Card(
+      margin: EdgeInsets.zero,
+      child: InkWell(
+        onTap: () async {
+          await showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) {
+              return ModalFormTask(
+                isEdit: true,
+                id: task.id,
+              );
+            },
+          );
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            border: Border(
+              left: BorderSide(
+                color: color,
+                width: 4,
+              ),
+            ),
+          ),
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          task.title,
+                          maxLines: 1,
+                          style: headerFont.copyWith(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          task.description,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: bodyFont.copyWith(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  CircleAvatar(
+                    radius: 16,
+                    backgroundColor: color,
+                    child: Icon(
+                      icon,
+                      size: 16,
+                      color: Colors.white,
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(height: 8),
+              const Divider(),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    formattedDate,
+                    style: bodyFont.copyWith(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () async {
+                      final result =
+                          await context.read<TaskCubit>().delete(task.id);
+                      result.fold(
+                        (l) => FunctionHelper.showSnackBar(
+                          context: context,
+                          message: l.message,
+                        ),
+                        (r) async {
+                          // Remove notification
+                          await LocalNotificationHelper.cancelNotification(
+                            task.id,
+                          );
+
+                          if (!context.mounted) {
+                            return;
+                          }
+
+                          FunctionHelper.showSnackBar(
+                            context: context,
+                            message: r.message,
+                            color: Colors.green,
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(
+                      FontAwesomeIcons.trash,
+                      size: 16,
+                      color: Colors.red,
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

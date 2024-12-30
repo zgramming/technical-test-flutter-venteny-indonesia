@@ -1,7 +1,10 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../config/enum.dart';
+import '../../core/error/failure.error.dart';
 import '../../data/models/dto/task_create_or_update.dto.dart';
+import '../../domain/entities/response/task_operation_response.entity.dart';
 import '../../domain/entities/task.entity.dart';
 import '../../domain/usecase/add_task.usecase.dart';
 import '../../domain/usecase/delete_task.usecase.dart';
@@ -55,31 +58,63 @@ class TaskCubit extends Cubit<TaskState> {
     );
   }
 
-  Future<void> add(TaskCreateOrUpdateDto task) async {
-    emit(TaskLoadingState());
+  Future<Either<Failure, TaskOperationResponseEntity>> add(
+    TaskCreateOrUpdateDto task,
+  ) async {
     final result = await addTaskUseCase(task);
     result.fold(
-      (l) => emit(TaskErrorState(message: l.message)),
-      (r) => emit(TaskSuccessState(tasks: r, filteredTasks: r)),
+      (l) {
+        emit(TaskErrorState(message: l.message));
+      },
+      (r) {
+        final newestTask = [...(state as TaskSuccessState).tasks, r.data!];
+        emit(TaskSuccessState(tasks: newestTask, filteredTasks: newestTask));
+      },
     );
+
+    return result;
   }
 
-  Future<void> update(int id, TaskCreateOrUpdateDto task) async {
-    emit(TaskLoadingState());
+  Future<Either<Failure, TaskOperationResponseEntity>> update(
+      int id, TaskCreateOrUpdateDto task) async {
     final result = await updateTaskUseCase(id, task);
     result.fold(
       (l) => emit(TaskErrorState(message: l.message)),
-      (r) => emit(TaskSuccessState(tasks: r, filteredTasks: r)),
+      (r) {
+        final tasks = [...(state as TaskSuccessState).tasks];
+        final updatedTask = [
+          for (var item in tasks)
+            if (item.id == id) r.data! else item
+        ];
+        emit(
+          TaskSuccessState(
+            tasks: updatedTask,
+            filteredTasks: updatedTask,
+          ),
+        );
+      },
     );
+
+    return result;
   }
 
-  Future<void> delete(int id) async {
-    emit(TaskLoadingState());
+  Future<Either<Failure, TaskOperationResponseEntity>> delete(int id) async {
     final result = await deleteTaskUseCase(id);
     result.fold(
       (l) => emit(TaskErrorState(message: l.message)),
-      (r) => emit(TaskSuccessState(tasks: r, filteredTasks: r)),
+      (r) {
+        final tasks = [...(state as TaskSuccessState).tasks];
+        final deletedTask = tasks.where((x) => x.id != id).toList();
+        emit(
+          TaskSuccessState(
+            tasks: deletedTask,
+            filteredTasks: deletedTask,
+          ),
+        );
+      },
     );
+
+    return result;
   }
 
   void filter({

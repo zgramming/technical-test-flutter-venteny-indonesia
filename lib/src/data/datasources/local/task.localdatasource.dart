@@ -1,14 +1,15 @@
 import '../../../config/constant.dart';
 import '../../../core/helper/database_sqlite.helper.dart';
 import '../../models/dto/task_create_or_update.dto.dart';
+import '../../models/response/task_operation_response.model.dart';
 import '../../models/task.model.dart';
 
 abstract class TaskLocalDataSource {
   Future<List<TaskModel>> get();
   Future<TaskModel> getById(int id);
-  Future<List<TaskModel>> add(TaskCreateOrUpdateDto task);
-  Future<List<TaskModel>> update(int id, TaskCreateOrUpdateDto task);
-  Future<List<TaskModel>> delete(int id);
+  Future<TaskOperationResponseModel> add(TaskCreateOrUpdateDto task);
+  Future<TaskOperationResponseModel> update(int id, TaskCreateOrUpdateDto task);
+  Future<TaskOperationResponseModel> delete(int id);
 }
 
 class TaskLocalDataSourceImpl implements TaskLocalDataSource {
@@ -38,14 +39,21 @@ class TaskLocalDataSourceImpl implements TaskLocalDataSource {
   }
 
   @override
-  Future<List<TaskModel>> add(TaskCreateOrUpdateDto task) async {
+  Future<TaskOperationResponseModel> add(TaskCreateOrUpdateDto task) async {
     final db = await databaseSQLiteHelper.database;
-    await db.insert(kTableTask, task.toMap());
-    return get();
+    final id = await db.insert(kTableTask, task.toMap());
+    final newTask = await getById(id);
+
+    return TaskOperationResponseModel(
+      success: true,
+      message: 'Task created successfully',
+      data: newTask,
+    );
   }
 
   @override
-  Future<List<TaskModel>> update(int id, TaskCreateOrUpdateDto task) async {
+  Future<TaskOperationResponseModel> update(
+      int id, TaskCreateOrUpdateDto task) async {
     final db = await databaseSQLiteHelper.database;
     await db.update(
       kTableTask,
@@ -54,18 +62,31 @@ class TaskLocalDataSourceImpl implements TaskLocalDataSource {
       whereArgs: [id],
     );
 
-    return get();
+    final newestTask = await getById(id);
+
+    return TaskOperationResponseModel(
+      success: true,
+      message: 'Task updated successfully',
+      data: newestTask,
+    );
   }
 
   @override
-  Future<List<TaskModel>> delete(int id) async {
+  Future<TaskOperationResponseModel> delete(int id) async {
     final db = await databaseSQLiteHelper.database;
+
+    final task = await getById(id);
+
     await db.delete(
       kTableTask,
       where: 'id = ?',
       whereArgs: [id],
     );
 
-    return get();
+    return TaskOperationResponseModel(
+      success: true,
+      message: 'Task deleted successfully',
+      data: task,
+    );
   }
 }

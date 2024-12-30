@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +8,7 @@ import '../../core/helper/function.helper.dart';
 
 import '../../config/enum.dart';
 import '../../config/font.dart';
+import '../../core/helper/local_notification.helper.dart';
 import '../../data/models/dto/task_create_or_update.dto.dart';
 import '../cubit/task.cubit.dart';
 import '../cubit/task_detail.cubit.dart';
@@ -36,7 +35,6 @@ class _ModalFormTaskState extends State<ModalFormTask> {
 
   DateTime? selectedDate;
   TaskStatus selectedStatus = TaskStatus.pending;
-
   bool isLoading = false;
 
   void _loadData() {
@@ -58,7 +56,7 @@ class _ModalFormTaskState extends State<ModalFormTask> {
     try {
       setState(() => isLoading = true);
       if (widget.isEdit) {
-        await context.read<TaskCubit>().update(
+        final result = await context.read<TaskCubit>().update(
               widget.id ?? 0,
               TaskCreateOrUpdateDto(
                 title: title,
@@ -67,8 +65,25 @@ class _ModalFormTaskState extends State<ModalFormTask> {
                 status: status,
               ),
             );
+
+        result.fold(
+          (l) {},
+          (r) async {
+            final id = r.data?.id ?? 0;
+            final body = description;
+
+            await LocalNotificationHelper.scheduleNotification(
+              id: id,
+              title: title,
+              body: body,
+              scheduledDate: date,
+            );
+            if (!mounted) return;
+            Navigator.of(context).pop();
+          },
+        );
       } else {
-        await context.read<TaskCubit>().add(
+        final result = await context.read<TaskCubit>().add(
               TaskCreateOrUpdateDto(
                 title: title,
                 description: description,
@@ -76,11 +91,24 @@ class _ModalFormTaskState extends State<ModalFormTask> {
                 status: status,
               ),
             );
+
+        result.fold(
+          (l) {},
+          (r) async {
+            final id = r.data?.id ?? 0;
+            final body = description;
+
+            await LocalNotificationHelper.scheduleNotification(
+              id: id,
+              title: title,
+              body: body,
+              scheduledDate: date,
+            );
+            if (!mounted) return;
+            Navigator.of(context).pop();
+          },
+        );
       }
-
-      if (!mounted) return;
-
-      Navigator.of(context).pop();
     } catch (e) {
       if (!mounted) return;
 
@@ -123,8 +151,6 @@ class _ModalFormTaskState extends State<ModalFormTask> {
                     return status == task.status;
                   }) ??
                   TaskStatus.pending;
-
-              log("selectedStatus: $selectedStatus");
 
               setState(() {});
             }
@@ -251,11 +277,44 @@ class _ModalFormTaskState extends State<ModalFormTask> {
                               ),
                             );
 
-                            if (selectedDate != null) {
-                              setState(() => this.selectedDate = selectedDate);
+                            if (!context.mounted) return;
 
-                              dateController.text = DateFormat('E, dd MMM yyyy')
-                                  .format(selectedDate);
+                            if (selectedDate != null) {
+                              final selectedTime = await showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.now(),
+                                builder: (context, child) {
+                                  return MediaQuery(
+                                    data: MediaQuery.of(context).copyWith(
+                                      alwaysUse24HourFormat: true,
+                                    ),
+                                    child: child ?? const SizedBox(),
+                                  );
+                                },
+                              );
+
+                              if (!context.mounted) return;
+
+                              if (selectedTime != null) {
+                                setState(() {
+                                  this.selectedDate = DateTime(
+                                    selectedDate.year,
+                                    selectedDate.month,
+                                    selectedDate.day,
+                                    selectedTime.hour,
+                                    selectedTime.minute,
+                                  );
+                                });
+
+                                final formattedDate =
+                                    DateFormat('E, dd MMM yyyy')
+                                        .format(selectedDate);
+                                final formattedTime =
+                                    selectedTime.format(context);
+
+                                dateController.text =
+                                    '$formattedDate $formattedTime';
+                              }
                             }
                           },
                           decoration: const InputDecoration(
@@ -270,6 +329,7 @@ class _ModalFormTaskState extends State<ModalFormTask> {
                           },
                         ),
                       ],
+
                       // Status
                       const SizedBox(height: 16),
                       ...[
