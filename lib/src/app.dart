@@ -87,7 +87,6 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp.router(
             title: 'Task Management App',
             routerConfig: router,
-            // theme: themeType == ThemeType.light ? lightTheme : darkTheme,
             theme: currentTheme == ThemeType.light ? lightTheme : darkTheme,
           );
         },
