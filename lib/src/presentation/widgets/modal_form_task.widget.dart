@@ -10,6 +10,7 @@ import '../../core/helper/function.helper.dart';
 
 import '../../config/enum.dart';
 import '../../config/font.dart';
+import '../../core/helper/local_notification.helper.dart';
 import '../../data/models/dto/task_create_or_update.dto.dart';
 import '../cubit/task.cubit.dart';
 import '../cubit/task_detail.cubit.dart';
@@ -78,6 +79,13 @@ class _ModalFormTaskState extends State<ModalFormTask> {
             );
       }
 
+      await LocalNotificationHelper.showNotification(
+        id: 1,
+        title: title,
+        body: description,
+        payload: "Task",
+      );
+
       if (!mounted) return;
 
       Navigator.of(context).pop();
@@ -129,9 +137,6 @@ class _ModalFormTaskState extends State<ModalFormTask> {
               setState(() {});
             }
           },
-        ),
-        BlocListener<TaskCubit, TaskState>(
-          listener: (context, state) {},
         ),
       ],
       child: BlocBuilder<TaskDetailCubit, TaskDetailState>(
