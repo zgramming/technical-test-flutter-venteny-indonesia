@@ -41,7 +41,10 @@ class TaskLocalDataSourceImpl implements TaskLocalDataSource {
   @override
   Future<TaskOperationResponseModel> add(TaskCreateOrUpdateDto task) async {
     final db = await databaseSQLiteHelper.database;
-    final id = await db.insert(kTableTask, task.toMap());
+    final id = await db.insert(
+      kTableTask,
+      task.toMap(),
+    );
     final newTask = await getById(id);
 
     return TaskOperationResponseModel(
@@ -53,7 +56,9 @@ class TaskLocalDataSourceImpl implements TaskLocalDataSource {
 
   @override
   Future<TaskOperationResponseModel> update(
-      int id, TaskCreateOrUpdateDto task) async {
+    int id,
+    TaskCreateOrUpdateDto task,
+  ) async {
     final db = await databaseSQLiteHelper.database;
     await db.update(
       kTableTask,
